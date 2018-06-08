@@ -8,16 +8,16 @@ public class ByteArrayOutputStream extends OutputStream {
     private byte[] array;
     private int count;
 
-    public ByteArrayOutputStream() {
-        this(INITIAL_SIZE);
+public ByteArrayOutputStream() {
+    this(INITIAL_SIZE);
     }
 
-    public ByteArrayOutputStream(int size){
-        if(size <= 0){
-            throw new IndexOutOfBoundsException("Size should be greater/not equals to 0 " + size);
-        }
-        this.array = new byte[size];
+public ByteArrayOutputStream(int size){
+    if(size <= 0){
+        throw new IndexOutOfBoundsException("Size should be greater/not equals to 0 " + size);
     }
+    this.array = new byte[size];
+}
 
     public void write(int value) throws IOException {
         if (array.length == count) {
@@ -39,19 +39,13 @@ public class ByteArrayOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] values, int off, int len) {
-        int unreadedCount = len - count;
-        // если array length меньше, чем количество свободного места
-        if (len <= unreadedCount) {
-            System.arraycopy(values, off, array, count, len);
-            count += len;
-        }
-        // если array.length > buffer.length, тогда увеличиваем size
-        if (len > unreadedCount) {
-            growSize(INITIAL_SIZE);
+    // количество свободного места
+        int freeSpace = len - count;
+
+        if (len > freeSpace) {
+            growSize(len - freeSpace + INITIAL_SIZE);
         }
         System.arraycopy(values, off, array, count, len);
         count += len;
     }
 }
-
-
